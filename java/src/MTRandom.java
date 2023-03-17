@@ -312,7 +312,7 @@ public class MTRandom extends Random {
 	 * @return The next value in the pseudo random sequence with the
 	 * specified number of bits in the lower part of the integer.
 	 */
-	protected final synchronized int next(int bits) {
+	public final synchronized int next1(int bits) {
 		// ---- Begin Mersenne Twister Algorithm ----
 		int y, kk;
 		if (mti >= N) {             // generate N words at one time
@@ -349,6 +349,18 @@ public class MTRandom extends Random {
 		// ---- End Mersenne Twister Algorithm ----
 		return (y >>> (32-bits));
 	}
+
+	public int next(int bits){
+
+		int a = next1(bits);
+		if(a < 0){
+
+			a = -a;
+		}
+
+		return a;
+	}
+
 
 	// This is a fairly obscure little code section to pack a
 	// byte[] into an int[] in little endian ordering.  

@@ -29,11 +29,6 @@ public class Lapin{
         this.age += 1;
     }
 
-    public boolean death(){
-
-
-    }
-
     public int getSexe(){
 
         return this.sexe;

@@ -198,8 +198,10 @@ int death(population*p, rabbit* r){
 
 
     if(age > 6){
+        
+        float survival_rate =  pow(0.6 * pow(0.9, age/12), 1/12);
 
-        if(death_chance <= 0.5){ //taux de survie mensuel de 95%
+        if(death_chance >= survival_rate * (age != 180)){ //taux de survie mensuel de 95.8%, si le lapin a 15 ans il meurt
             //printf("death1\n"); //meurt
             p->nb_rabbit--;
             return 1;
@@ -216,7 +218,7 @@ int death(population*p, rabbit* r){
     */
     else{
 
-        if(death_chance <= 0.9){  //taux de survie mensuel de 91%
+        if(death_chance >= 0.91){  //taux de survie mensuel de 91%
             //printf("death2\n");
              //meurt
             p->nb_rabbit--;
@@ -250,6 +252,10 @@ void life(population* p, int months){
                 if(current_r == NULL){
 
                     break;
+                }
+                else{
+
+                    continue;
                 }
             }
 
@@ -290,12 +296,27 @@ int main(){
     r2->sex = 0;
     r2->age = 13;
 
+    rabbit* r4 = create_new_rabbit();
+    add_rabbit(p, r4);
+    r4->sex = 0;
+    r4->age = 13;
+
+    rabbit* r5 = create_new_rabbit();
+    add_rabbit(p, r5);
+    r5->sex = 0;
+    r5->age = 13;
+
     rabbit* r3 = create_new_rabbit();
     add_rabbit(p, r3);
     r3->sex = 0;
     r3->age = 13;
 
-    p->nb_rabbit = 3;
+    rabbit* r6 = create_new_rabbit();
+    add_rabbit(p, r6);
+    r6->sex = 0;
+    r6->age = 13;
+
+    p->nb_rabbit = 6;
     
     /*
     population p = {NULL, 0};
