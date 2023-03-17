@@ -199,7 +199,7 @@ int death(population*p, rabbit* r){
 
     if(age > 6){
         
-        float survival_rate =  pow(0.6 * pow(0.9, age/12), 1/12);
+        float survival_rate =  pow(0.6 * pow(0.9, (age > 10) * ((age/12)%10)), 1/12);
 
         if(death_chance >= survival_rate * (age != 180)){ //taux de survie mensuel de 95.8%, si le lapin a 15 ans il meurt
             //printf("death1\n"); //meurt
