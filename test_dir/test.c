@@ -8,6 +8,7 @@
 #include "mersenne_twister.h"
 
 float POURCENT_LITTER[5] = {0.07, 0.27, 0.32, 0.29, 0.05};
+float POURCENT_MATURITY[4] = {0.15, 0.27, 0.47, 0.11};
 
 typedef struct population{
 
@@ -24,6 +25,7 @@ typedef struct rabbit{
     int age;
     int nb_litter;
     int max_nb_litter;
+    int maturity;
 
 }rabbit;
 
@@ -70,6 +72,57 @@ void free_population(population* p){
     free(current_r);
 }
 
+int sort_maturity(){
+
+    double draw;
+    int j;
+
+    double * cumulative_prob = malloc(sizeof(double) * 4); //tableau de densité cumulative
+    int * month_maturity = malloc(sizeof(double) * 4);  //tableau de la population de chaque classe
+
+    for(int i=0; i<5; i++){
+
+        month_maturity[i] = 0;  //on initialise à 0 la population de chaque classe
+    }
+
+    cumulative_prob[0] = POURCENT_MATURITY[0];
+
+    for(int i=1; i<5; i++){
+
+        cumulative_prob[i] = cumulative_prob[i-1] + POURCENT_MATURITY[i];
+    }
+
+    for(int i=0; i<1000; i++){
+
+        draw = genrand_real1();
+        j=0;
+
+        while(j < 5){
+             
+            if(draw <= cumulative_prob[j]){  //si le nombre tiré est inférieur ou égale à la densité cumulative de la classe j
+                month_maturity[j]++;      //on incrémente la population de la classe j
+                break;
+            }
+            
+            j++;
+        }
+    }
+
+    int index_max = 0;
+    for(int i=0; i<5; i++){
+
+        if(month_maturity[i] > month_maturity[index_max]){
+
+            index_max = i;
+        }
+    }
+
+    free(month_maturity);
+    free(cumulative_prob);
+
+    return index_max + 5; //la maturité est atteinte à partir du 5eme mois
+}
+
 rabbit* create_new_rabbit(){
 
     rabbit* r = malloc(sizeof(rabbit)*1);
@@ -88,6 +141,7 @@ rabbit* create_new_rabbit(){
     r->previous = NULL;
     r->nb_litter = 0;
     r->max_nb_litter = 0;
+    r->maturity = sort_maturity();
 
     return r;
 
@@ -220,15 +274,6 @@ int death(population*p, rabbit* r){
             return 1;
         }
     }
-    /*
-    else if(p->population[index]%100 > 0){
-
-        if(genrand_real1() > 0.6){
-
-            p->population[index] = 0; //meurt
-        }
-    }
-    */
     else{
 
         if(death_chance >= 0.91){  //taux de survie mensuel de 91%
@@ -259,22 +304,22 @@ void life(population* p, int months){
 
         while(i<index && current_r->next != NULL){  //on verifie que les lapins qui taient nes avant cette année
 
-            if(death(p, current_r)){
+            if(death(p, current_r)){  //si le lapin est mort...
 
-                current_r = delete_rabbit(p, current_r);
-                if(current_r == NULL){
+                current_r = delete_rabbit(p, current_r); //...alors on le supprime et on récupère le suivant
+                if(current_r == NULL){   //si le suivant n'existe pas alors on passe au mois suivant
 
                     break;
                 }
-                else{
+                else{  //sinon on passe au lapin suivant
 
                     continue;
                 }
             }
 
-            if(current_r->age > 6 && current_r->sex == 0){  //si le lapin est une femelle et adulte
+            if(current_r->age >= current_r->maturity && current_r->sex == 0){  //si le lapin est une femelle et adulte
                 
-                if(current_month%12 == 0){
+                if(current_r->max_nb_litter == 0 || (current_r->age - current_r->maturity)%12 == 0){   //si la lapine n'a jamais été enceinte ou si ça fait un an depuis le dernier tirage de nb_litter_per_year
 
                     nb_litter_per_year(current_r);
                 }
