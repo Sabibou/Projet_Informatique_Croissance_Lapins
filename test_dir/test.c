@@ -14,6 +14,7 @@ typedef struct population{
 
     struct rabbit* start;
     int nb_rabbit;
+    int nb_total_rabbit;
 
 }population;
 
@@ -55,6 +56,7 @@ population* create_new_population(){
     population* p = malloc(sizeof(population)*1);
     p->start = NULL;
     p->nb_rabbit = 0;
+    p->nb_total_rabbit = 0;
     return p;
 }
 
@@ -92,7 +94,7 @@ int sort_maturity(){
         cumulative_prob[i] = cumulative_prob[i-1] + POURCENT_MATURITY[i];
     }
 
-    for(int i=0; i<1000; i++){
+    for(int i=0; i<100; i++){
 
         draw = genrand_real1();
         j=0;
@@ -166,6 +168,19 @@ void add_rabbit(population* p, rabbit* r){
     }
 }
 
+void link_rabbit(rabbit** tab, int taille){
+
+    tab[0]->next = tab[1];
+
+    for(int i=1; i<taille-1; i++){
+
+        tab[i]->previous = tab[i-1];
+        tab[i]->next = tab[i+1];
+    }
+
+    tab[taille-1]->previous = tab[taille-2];
+}
+
 rabbit* delete_rabbit(population* p, rabbit* r){
 
     rabbit* new_rabbit;
@@ -212,7 +227,7 @@ void nb_litter_per_year(rabbit* r){
         cumulative_prob[i] = cumulative_prob[i-1] + POURCENT_LITTER[i];
     }
 
-    for(int i=0; i<1000; i++){
+    for(int i=0; i<100; i++){
 
         draw = genrand_real1();
         j=0;
@@ -248,12 +263,21 @@ void gave_birth(population* p, rabbit* r){
     if(r->nb_litter < r->max_nb_litter && genrand_real1() > 0.15){
 
          int number_rabbits = genrand_int32() % 4 + 3;  
+
+         rabbit** tab = malloc(sizeof(rabbit*) * number_rabbits);
          
          for(int i=0; i<number_rabbits; i++){
 
-             add_rabbit(p, create_new_rabbit());
-             p->nb_rabbit++;
+             tab[i] = create_new_rabbit();
          }
+         
+         link_rabbit(tab, number_rabbits);
+         add_rabbit(p, tab[0]);
+
+         p->nb_rabbit += number_rabbits;
+         p->nb_total_rabbit += number_rabbits;
+
+         free(tab);
     }
 
 }
@@ -269,7 +293,7 @@ int death(population*p, rabbit* r){
         float survival_rate =  pow(0.6 * pow(0.9, (age > 10) * (age%10)), 1/12);
 
         if(death_chance >= survival_rate * (age != 180)){ //taux de survie mensuel de 95.8%, si le lapin a 15 ans il meurt
-            //printf("death1\n"); //meurt
+           
             p->nb_rabbit--;
             return 1;
         }
@@ -277,8 +301,7 @@ int death(population*p, rabbit* r){
     else{
 
         if(death_chance >= 0.91){  //taux de survie mensuel de 91%
-            //printf("death2\n");
-             //meurt
+
             p->nb_rabbit--;
             return 1;
         }
@@ -336,7 +359,7 @@ void life(population* p, int months){
             i++;
         }
         current_month++;
-        printf("%d : %d\n", current_month, p->nb_rabbit);
+        printf("%d : vivants : %d | morts : %d | total : %d\n", current_month, p->nb_rabbit, p->nb_total_rabbit-p->nb_rabbit, p->nb_total_rabbit);
     } 
 }
 
