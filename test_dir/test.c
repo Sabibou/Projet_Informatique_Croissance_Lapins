@@ -13,6 +13,7 @@ float POURCENT_MATURITY[4] = {0.15, 0.27, 0.47, 0.11};
 typedef struct population{
 
     struct rabbit* start;
+    struct rabbit* end;
     int nb_rabbit;
     int nb_total_rabbit;
 
@@ -33,22 +34,18 @@ typedef struct rabbit{
 
 long int rabbit_population_simulation(int nb_months){
 
-    //le premier mois est le nb_couple_this_month
-    //et on a un couple jeune
-    long int nb_couples_this_month = 1; 
-    long int nb_couples_last_month = 0;
-    long int to_keep;
+    if(nb_months == 0){
 
-    //au commence au deuxieme mois
-    for(int i=2; i<=nb_months; i++){
-
-        to_keep = nb_couples_this_month;
-        nb_couples_this_month = nb_couples_last_month + nb_couples_this_month;
-        nb_couples_last_month = to_keep;
-        printf("%ld\n", nb_couples_this_month);
+        return 0;
     }
+    else if(nb_months == 1){
 
-    return nb_couples_this_month;
+        return 1;
+    }
+    else{
+
+        return (rabbit_population_simulation(nb_months - 1) + rabbit_population_simulation(nb_months - 2));
+    }
 }
 
 population* create_new_population(){
@@ -154,36 +151,24 @@ void add_rabbit(population* p, rabbit* r){
     if(p->start == NULL){
 
         p->start = r;
+        p->end = r;
     }
     else{
-
-        rabbit* current_r = p->start;
-        while(current_r->next != NULL){
-
-            current_r = current_r->next;
-        }
-
-        current_r->next = r;
-        r->previous = current_r;
+        
+        r->previous = p->end;
+        p->end->next = r;
+        p->end = r;
     }
-}
-
-void link_rabbit(rabbit** tab, int taille){
-
-    tab[0]->next = tab[1];
-
-    for(int i=1; i<taille-1; i++){
-
-        tab[i]->previous = tab[i-1];
-        tab[i]->next = tab[i+1];
-    }
-
-    tab[taille-1]->previous = tab[taille-2];
 }
 
 rabbit* delete_rabbit(population* p, rabbit* r){
 
     rabbit* new_rabbit;
+
+    if(r->next == NULL){     //si le lapin est dernier
+
+        p->end = r->previous;
+    }
 
     if(r->previous != NULL){
 
@@ -262,22 +247,16 @@ void gave_birth(population* p, rabbit* r){
 
     if(r->nb_litter < r->max_nb_litter && genrand_real1() > 0.15){
 
-         int number_rabbits = genrand_int32() % 4 + 3;  
+        int number_rabbits = genrand_int32() % 4 + 3;  
 
-         rabbit** tab = malloc(sizeof(rabbit*) * number_rabbits);
-         
-         for(int i=0; i<number_rabbits; i++){
+        for(int i=0; i<number_rabbits; i++){
 
-             tab[i] = create_new_rabbit();
-         }
-         
-         link_rabbit(tab, number_rabbits);
-         add_rabbit(p, tab[0]);
+            add_rabbit(p, create_new_rabbit());
+        }
 
-         p->nb_rabbit += number_rabbits;
-         p->nb_total_rabbit += number_rabbits;
+        p->nb_rabbit += number_rabbits;
+        p->nb_total_rabbit += number_rabbits;
 
-         free(tab);
     }
 
 }
@@ -368,63 +347,49 @@ int main(){
     unsigned long init[4]={0x123, 0x234, 0x345, 0x456}, length=4;
     init_by_array(init, length); 
 
-    //printf("%ld\n", rabbit_population_simulation(10));
+    printf("%ld\n", rabbit_population_simulation(30));
     
-    /*
-    population p = {NULL, 0};
-    rabbit r = {NULL, NULL, 1 ,0};
-    rabbit ra = {NULL, NULL, 1 ,7};
-    rabbit rab = {NULL, NULL, 0 ,7};
-    rabbit rabi = {NULL, NULL, 1, 10};
+    
+    for(int i=0; i<5;i++){
 
-    printf("d");
+            population* p = create_new_population();
 
-    add_rabbit(&p, &r);
-    add_rabbit(&p, &ra);
-    add_rabbit(&p, &rab);
-    add_rabbit(&p, &rabi);
-    p.nb_rabbit = 4;
-    printf("%d", p.start->next->previous->age);
-    */
-   for(int i=0; i<5;i++){
+            rabbit* r1 = create_new_rabbit();
+            add_rabbit(p, r1);
+            r1->sex = 0;
+            r1->age = 13;
 
-        population* p = create_new_population();
+            rabbit* r2 = create_new_rabbit();
+            add_rabbit(p, r2);
+            r2->sex = 0;
+            r2->age = 13;
 
-        rabbit* r1 = create_new_rabbit();
-        add_rabbit(p, r1);
-        r1->sex = 0;
-        r1->age = 13;
+            rabbit* r4 = create_new_rabbit();
+            add_rabbit(p, r4);
+            r4->sex = 0;
+            r4->age = 13;
 
-        rabbit* r2 = create_new_rabbit();
-        add_rabbit(p, r2);
-        r2->sex = 0;
-        r2->age = 13;
+            rabbit* r5 = create_new_rabbit();
+            add_rabbit(p, r5);
+            r5->sex = 0;
+            r5->age = 13;
 
-        rabbit* r4 = create_new_rabbit();
-        add_rabbit(p, r4);
-        r4->sex = 0;
-        r4->age = 13;
+            rabbit* r3 = create_new_rabbit();
+            add_rabbit(p, r3);
+            r3->sex = 0;
+            r3->age = 13;
 
-        rabbit* r5 = create_new_rabbit();
-        add_rabbit(p, r5);
-        r5->sex = 0;
-        r5->age = 13;
+            rabbit* r6 = create_new_rabbit();
+            add_rabbit(p, r6);
+            r6->sex = 0;
+            r6->age = 13;
 
-        rabbit* r3 = create_new_rabbit();
-        add_rabbit(p, r3);
-        r3->sex = 0;
-        r3->age = 13;
-
-        rabbit* r6 = create_new_rabbit();
-        add_rabbit(p, r6);
-        r6->sex = 0;
-        r6->age = 13;
-
-        p->nb_rabbit = 6;
-        life(p, 72);
-        printf("nb lapins : %d\n", p->nb_rabbit);
-        free_population(p);
-   }
+            p->nb_rabbit = 6;
+            p->nb_total_rabbit = 6;
+            life(p, 72);
+            printf("nb lapins : %d\n", p->nb_rabbit);
+            free_population(p);
+    }
 
 
     return 0;
