@@ -52,6 +52,7 @@ population* create_new_population(){
     
     population* p = malloc(sizeof(population)*1);
     p->start = NULL;
+    p->end = NULL;
     p->nb_rabbit = 0;
     p->nb_total_rabbit = 0;
     return p;
@@ -267,7 +268,7 @@ int death(population*p, rabbit* r){
     float death_chance = genrand_real1();
 
 
-    if(age > 6){
+    if(age > r->maturity){
         
         float survival_rate =  pow(0.6 * pow(0.9, (age > 10) * (age%10)), 1/12);
 
