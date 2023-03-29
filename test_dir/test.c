@@ -1,7 +1,3 @@
-/* 
-  
-*/
-
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -9,6 +5,16 @@
 
 float POURCENT_LITTER[5] = {0.07, 0.27, 0.32, 0.29, 0.05};
 float POURCENT_MATURITY[4] = {0.15, 0.27, 0.47, 0.11};
+
+/* ---------------------------------------------------------------------  /
+ struct population    Permet la mise en place de la struct population.
+ Elle permet de créer une liste doublement chaînée de structures rabbit.
+ Elle permet aussi de répertorier l'effectif de la population.
+
+ En entrée: rien
+
+ En sortie: rien
+/----------------------------------------------------------------------- */
 
 typedef struct population{
 
@@ -18,6 +24,16 @@ typedef struct population{
     int nb_total_rabbit;
 
 }population;
+
+/* ---------------------------------------------------------------------  /
+ struct rabbit    Permet regroupe l'ensemble des attributs permettant
+ d'identifier un lapin (sexe, âge, ...). Il possède aussi des pointeurs
+ vers la structure rabbit précédante et suivante dans la liste  
+
+ En entrée: rien
+
+ En sortie: rien
+/----------------------------------------------------------------------- */
 
 typedef struct rabbit{
 
@@ -31,6 +47,15 @@ typedef struct rabbit{
 
 }rabbit;
 
+/* ---------------------------------------------------------------------  /
+ rabbit_population_simulation    Implémente la suite de fibonnacci 
+ de façcon récursive pour le cas de l'évolution d'une population de 
+ lapin
+
+ En entrée: nb_months un entier
+
+ En sortie: Retourne la valeur de fib(nb_months)
+/----------------------------------------------------------------------- */
 
 long int rabbit_population_simulation(int nb_months){
 
@@ -46,7 +71,17 @@ long int rabbit_population_simulation(int nb_months){
 
         return (rabbit_population_simulation(nb_months - 1) + rabbit_population_simulation(nb_months - 2));
     }
-}
+} 
+
+/* ---------------------------------------------------------------------  / 
+ create_new_population    Permet la création et initialisation d'une 
+ struct population. 
+
+ En entrée: rien
+
+ En sortie: Retourne un pointeur sur la structure population créée avec 
+ ses valeurs initialisées
+/----------------------------------------------------------------------- */
 
 population* create_new_population(){
     
@@ -57,6 +92,16 @@ population* create_new_population(){
     p->nb_total_rabbit = 0;
     return p;
 }
+
+/* ---------------------------------------------------------------------  / 
+ free_population    Libère la mémoire alloué par l'ensemble de la 
+ liste (de toutes les structures lapins, ainsi que de la structure 
+ population)
+
+ En entrée: p un pointeur sur une structure population
+
+ En sortie: rien
+/----------------------------------------------------------------------- */
 
 void free_population(population* p){
 
@@ -71,6 +116,16 @@ void free_population(population* p){
 
     free(current_r);
 }
+
+/* ---------------------------------------------------------------------  /
+ sort_maturity    Permet de choisir aléatoirement le mois à partir 
+ duquel un lapin sera mature
+
+ En entrée: rien
+
+ En sortie: Renvoie un entier compris entre 5 et 8 tiré selon la loi 
+ de probabilité donnée par le tableau POURCENT_MATURITY
+/----------------------------------------------------------------------- */
 
 int sort_maturity(){
 
@@ -123,6 +178,16 @@ int sort_maturity(){
     return index_max + 5; //la maturité est atteinte à partir du 5eme mois
 }
 
+/* ---------------------------------------------------------------------  /
+ create_new_rabbit    Permet la création et initialisation d'une 
+ struct rabbit. 
+
+ En entrée: rien
+
+ En sortie: Renvoie un pointeur sur la structure rabbit créée et 
+ initialisée
+/----------------------------------------------------------------------- */
+
 rabbit* create_new_rabbit(){
 
     rabbit* r = malloc(sizeof(rabbit)*1);
@@ -147,9 +212,19 @@ rabbit* create_new_rabbit(){
 
 }
 
+/* ---------------------------------------------------------------------  / 
+ add_rabbit    Permet l'ajout d'une structure rabbit à la fin de la 
+ liste doublement chaînée donnée par une structure population
+
+ En entrée: p un pointeur vers une structure population et r un 
+ pointeur vers une structure rabbit
+
+ En sortie: rien
+/----------------------------------------------------------------------- */
+
 void add_rabbit(population* p, rabbit* r){
 
-    if(p->start == NULL){
+    if(p->start == NULL){  //si la liste est vide
 
         p->start = r;
         p->end = r;
@@ -161,6 +236,18 @@ void add_rabbit(population* p, rabbit* r){
         p->end = r;
     }
 }
+
+/* ---------------------------------------------------------------------  / 
+ delete_rabbit    Permet la suppression d'une structure rabbit de la 
+ liste mais aussi la libération de la mémoire de cette structure
+
+ En entrée: p un pointeur vers une structure population et r un 
+ pointeur vers une structure rabbit
+
+ En sortie: un pointeur vers la structure rabbit suivant celle supprimée
+ dans la liste (peut être null si la structure supprimée était la 
+ dernière). 
+/----------------------------------------------------------------------- */
 
 rabbit* delete_rabbit(population* p, rabbit* r){
 
@@ -190,6 +277,18 @@ rabbit* delete_rabbit(population* p, rabbit* r){
     return new_rabbit;
 
 }
+
+/* ---------------------------------------------------------------------  /
+ nb_litter_per_year    Permet de choisir aléatoirement le nombre de 
+ portées maximums que pourra avoir une lapine sur une période d'un an.
+ Met à jour l'attribut max_nb_litter de la structure avec un entier 
+ compris entre 4 et 8 tiré aléatoirement selon la loi de probabilité 
+ établie par le tableau POURCENT_LITTER
+
+ En entrée: r un pointeur sur une structure rabbit
+
+ En sortie: rien
+/----------------------------------------------------------------------- */
 
 void nb_litter_per_year(rabbit* r){
 
@@ -244,6 +343,20 @@ void nb_litter_per_year(rabbit* r){
     r->max_nb_litter = index_max + 4;
 }
 
+/* ---------------------------------------------------------------------  /
+ gave_birth    Implémente le mis à bas d'une portée de lapins. Si elle 
+ peut encore mettre à bas cette année alors elle a 85% de chances de le 
+ faire.
+ On ajoute alors à la liste entre 3 et 6 (tirés de façon uniforme) 
+ structures de lapins crées.
+ Met aussi à jour l'effectif de la population
+
+ En entrée: p un pointeur sur une structure population et 
+ r un pointeur sur une structure rabbit
+
+ En sortie: rien
+/----------------------------------------------------------------------- */
+
 void gave_birth(population* p, rabbit* r){
 
     if(r->nb_litter < r->max_nb_litter && genrand_real1() > 0.15){
@@ -261,6 +374,17 @@ void gave_birth(population* p, rabbit* r){
     }
 
 }
+
+/* ---------------------------------------------------------------------  / 
+ death    Décide de façon aléatoire si un lapin meurt durant un mois 
+ selon l'âge.
+ Met à jour l'effectif de la population.
+
+ En entrée: p un pointeur sur une structure population et 
+ r un pointeur sur une structure rabbit
+
+ En sortie: La valeur retournée est 0 si le lapin survie et 1 s'il meurt
+/----------------------------------------------------------------------- */
 
 int death(population*p, rabbit* r){
 
@@ -290,22 +414,41 @@ int death(population*p, rabbit* r){
     return 0;
 }
 
+/* ---------------------------------------------------------------------  / 
+ get_older    Incrémente de un l'attribut âge d'une structure rabbit
+
+ En entrée: r un pointeur sur une structure rabbit
+
+ En sortie: rien
+/----------------------------------------------------------------------- */
+
 void get_older(rabbit* r){
 
     r->age++;
 }
 
+/* ---------------------------------------------------------------------  / 
+ life    Fonction principale simulant l'évolution d'une population de
+ lapins au cours des mois.
+ Affiche tous les mois l'effectif de la population.
+
+ En entrée: p un pointeur sur une structure population et un entier 
+ months donnant le nombre de mois que l'on va simuler.
+
+ En sortie: rien
+/----------------------------------------------------------------------- */
+
 void life(population* p, int months){
 
     int current_month = 0;
 
-    while(current_month < months && p->nb_rabbit > 0){
+    while(current_month < months && p->nb_rabbit > 0){ 
 
         int i = 0;
         int index = p->nb_rabbit;
         rabbit* current_r = p->start;
 
-        while(i<index && current_r->next != NULL){  //on verifie que les lapins qui taient nes avant cette année
+        while(i<index && current_r->next != NULL){  //on parcours que les lapins nés avant ce mois
 
             if(death(p, current_r)){  //si le lapin est mort...
 
@@ -314,7 +457,7 @@ void life(population* p, int months){
 
                     break;
                 }
-                else{  //sinon on passe au lapin suivant
+                else{  //sinon on passe à la boucle suivante et donc au lapin que l'on vient de récupérer
 
                     continue;
                 }
@@ -324,21 +467,19 @@ void life(population* p, int months){
                 
                 if(current_r->max_nb_litter == 0 || (current_r->age - current_r->maturity)%12 == 0){   //si la lapine n'a jamais été enceinte ou si ça fait un an depuis le dernier tirage de nb_litter_per_year
 
-                    nb_litter_per_year(current_r);
+                    nb_litter_per_year(current_r);  //
                 }
 
                 gave_birth(p, current_r);
-                //printf("naissance\n");
             
             }
 
             get_older(current_r);
-            //printf("get_older\n");
             
-            current_r = current_r->next;
-            i++;
+            current_r = current_r->next; 
+            i++; //on passe au lapin suivant
         }
-        current_month++;
+        current_month++;  //on passe au mois suivant
         printf("%d : vivants : %d | morts : %d | total : %d\n", current_month, p->nb_rabbit, p->nb_total_rabbit-p->nb_rabbit, p->nb_total_rabbit);
     } 
 }
@@ -387,8 +528,10 @@ int main(){
 
             p->nb_rabbit = 6;
             p->nb_total_rabbit = 6;
+
             life(p, 72);
             printf("nb lapins : %d\n", p->nb_rabbit);
+
             free_population(p);
     }
 
