@@ -48,7 +48,7 @@ typedef struct rabbit{
 }rabbit;
 
 /* ---------------------------------------------------------------------  /
- rabbit_population_simulation    Implémente la suite de fibonnacci 
+ rabbitPopulationSimulation    Implémente la suite de fibonnacci 
  de façcon récursive pour le cas de l'évolution d'une population de 
  lapin
 
@@ -57,7 +57,7 @@ typedef struct rabbit{
  En sortie: Retourne la valeur de fib(nb_months)
 /----------------------------------------------------------------------- */
 
-long int rabbit_population_simulation(int nb_months){
+long int rabbitPopulationSimulation(int nb_months){
 
     if(nb_months == 0){
 
@@ -69,12 +69,12 @@ long int rabbit_population_simulation(int nb_months){
     }
     else{
 
-        return (rabbit_population_simulation(nb_months - 1) + rabbit_population_simulation(nb_months - 2));
+        return (rabbitPopulationSimulation(nb_months - 1) + rabbitPopulationSimulation(nb_months - 2));
     }
 } 
 
 /* ---------------------------------------------------------------------  / 
- create_new_population    Permet la création et initialisation d'une 
+ createNewPopulation    Permet la création et initialisation d'une 
  struct population. 
 
  En entrée: rien
@@ -83,7 +83,7 @@ long int rabbit_population_simulation(int nb_months){
  ses valeurs initialisées
 /----------------------------------------------------------------------- */
 
-population* create_new_population(){
+population* createNewPopulation(){
     
     population* p = malloc(sizeof(population)*1);
     p->start = NULL;
@@ -94,7 +94,7 @@ population* create_new_population(){
 }
 
 /* ---------------------------------------------------------------------  / 
- free_population    Libère la mémoire alloué par l'ensemble de la 
+ freePopulation    Libère la mémoire alloué par l'ensemble de la 
  liste (de toutes les structures lapins, ainsi que de la structure 
  population)
 
@@ -103,7 +103,7 @@ population* create_new_population(){
  En sortie: rien
 /----------------------------------------------------------------------- */
 
-void free_population(population* p){
+void freePopulation(population* p){
 
     rabbit* current_r = p->start;
     free(p);
@@ -118,7 +118,7 @@ void free_population(population* p){
 }
 
 /* ---------------------------------------------------------------------  /
- sort_maturity    Permet de choisir aléatoirement le mois à partir 
+ sortMaturity    Permet de choisir aléatoirement le mois à partir 
  duquel un lapin sera mature
 
  En entrée: rien
@@ -127,7 +127,7 @@ void free_population(population* p){
  de probabilité donnée par le tableau POURCENT_MATURITY
 /----------------------------------------------------------------------- */
 
-int sort_maturity(){
+int sortMaturity(){
 
     double draw;
     int j;
@@ -179,7 +179,7 @@ int sort_maturity(){
 }
 
 /* ---------------------------------------------------------------------  /
- create_new_rabbit    Permet la création et initialisation d'une 
+ createNewRabbit    Permet la création et initialisation d'une 
  struct rabbit. 
 
  En entrée: rien
@@ -188,7 +188,7 @@ int sort_maturity(){
  initialisée
 /----------------------------------------------------------------------- */
 
-rabbit* create_new_rabbit(){
+rabbit* createNewRabbit(){
 
     rabbit* r = malloc(sizeof(rabbit)*1);
     float random = genrand_real1();
@@ -206,14 +206,14 @@ rabbit* create_new_rabbit(){
     r->previous = NULL;
     r->nb_litter = 0;
     r->max_nb_litter = 0;
-    r->maturity = sort_maturity();
+    r->maturity = sortMaturity();
 
     return r;
 
 }
 
 /* ---------------------------------------------------------------------  / 
- add_rabbit    Permet l'ajout d'une structure rabbit à la fin de la 
+ addRabbit    Permet l'ajout d'une structure rabbit à la fin de la 
  liste doublement chaînée donnée par une structure population
 
  En entrée: p un pointeur vers une structure population et r un 
@@ -222,7 +222,7 @@ rabbit* create_new_rabbit(){
  En sortie: rien
 /----------------------------------------------------------------------- */
 
-void add_rabbit(population* p, rabbit* r){
+void addRabbit(population* p, rabbit* r){
 
     if(p->start == NULL){  //si la liste est vide
 
@@ -238,7 +238,7 @@ void add_rabbit(population* p, rabbit* r){
 }
 
 /* ---------------------------------------------------------------------  / 
- delete_rabbit    Permet la suppression d'une structure rabbit de la 
+ deleteRabbit    Permet la suppression d'une structure rabbit de la 
  liste mais aussi la libération de la mémoire de cette structure
 
  En entrée: p un pointeur vers une structure population et r un 
@@ -249,7 +249,7 @@ void add_rabbit(population* p, rabbit* r){
  dernière). 
 /----------------------------------------------------------------------- */
 
-rabbit* delete_rabbit(population* p, rabbit* r){
+rabbit* deleteRabbit(population* p, rabbit* r){
 
     rabbit* new_rabbit;
 
@@ -279,7 +279,7 @@ rabbit* delete_rabbit(population* p, rabbit* r){
 }
 
 /* ---------------------------------------------------------------------  /
- nb_litter_per_year    Permet de choisir aléatoirement le nombre de 
+ nbLitterPerYear    Permet de choisir aléatoirement le nombre de 
  portées maximums que pourra avoir une lapine sur une période d'un an.
  Met à jour l'attribut max_nb_litter de la structure avec un entier 
  compris entre 4 et 8 tiré aléatoirement selon la loi de probabilité 
@@ -290,7 +290,7 @@ rabbit* delete_rabbit(population* p, rabbit* r){
  En sortie: rien
 /----------------------------------------------------------------------- */
 
-void nb_litter_per_year(rabbit* r){
+void nbLitterPerYear(rabbit* r){
 
     r->nb_litter = 0;
 
@@ -344,7 +344,7 @@ void nb_litter_per_year(rabbit* r){
 }
 
 /* ---------------------------------------------------------------------  /
- gave_birth    Implémente le mis à bas d'une portée de lapins. Si elle 
+ gaveBirth    Implémente le mis à bas d'une portée de lapins. Si elle 
  peut encore mettre à bas cette année alors elle a 85% de chances de le 
  faire.
  On ajoute alors à la liste entre 3 et 6 (tirés de façon uniforme) 
@@ -357,7 +357,7 @@ void nb_litter_per_year(rabbit* r){
  En sortie: rien
 /----------------------------------------------------------------------- */
 
-void gave_birth(population* p, rabbit* r){
+void gaveBirth(population* p, rabbit* r){
 
     if(r->nb_litter < r->max_nb_litter && genrand_real1() > 0.15){
 
@@ -365,7 +365,7 @@ void gave_birth(population* p, rabbit* r){
 
         for(int i=0; i<number_rabbits; i++){
 
-            add_rabbit(p, create_new_rabbit());
+            addRabbit(p, createNewRabbit());
         }
 
         p->nb_rabbit += number_rabbits;
@@ -415,14 +415,14 @@ int death(population*p, rabbit* r){
 }
 
 /* ---------------------------------------------------------------------  / 
- get_older    Incrémente de un l'attribut âge d'une structure rabbit
+ getOlder    Incrémente de un l'attribut âge d'une structure rabbit
 
  En entrée: r un pointeur sur une structure rabbit
 
  En sortie: rien
 /----------------------------------------------------------------------- */
 
-void get_older(rabbit* r){
+void getOlder(rabbit* r){
 
     r->age++;
 }
@@ -452,7 +452,7 @@ void life(population* p, int months){
 
             if(death(p, current_r)){  //si le lapin est mort...
 
-                current_r = delete_rabbit(p, current_r); //...alors on le supprime et on récupère le suivant
+                current_r = deleteRabbit(p, current_r); //...alors on le supprime et on récupère le suivant
                 if(current_r == NULL){   //si le suivant n'existe pas alors on passe au mois suivant
 
                     break;
@@ -465,16 +465,16 @@ void life(population* p, int months){
 
             if(current_r->age >= current_r->maturity && current_r->sex == 0){  //si le lapin est une femelle et adulte
                 
-                if(current_r->max_nb_litter == 0 || (current_r->age - current_r->maturity)%12 == 0){   //si la lapine n'a jamais été enceinte ou si ça fait un an depuis le dernier tirage de nb_litter_per_year
+                if(current_r->max_nb_litter == 0 || (current_r->age - current_r->maturity)%12 == 0){   //si la lapine n'a jamais été enceinte ou si ça fait un an depuis le dernier tirage de nbLitterPerYear
 
-                    nb_litter_per_year(current_r);  //
+                    nbLitterPerYear(current_r);  //
                 }
 
-                gave_birth(p, current_r);
+                gaveBirth(p, current_r);
             
             }
 
-            get_older(current_r);
+            getOlder(current_r);
             
             current_r = current_r->next; 
             i++; //on passe au lapin suivant
@@ -489,40 +489,40 @@ int main(){
     unsigned long init[4]={0x123, 0x234, 0x345, 0x456}, length=4;
     init_by_array(init, length); 
 
-    printf("%ld\n", rabbit_population_simulation(30));
+    printf("%ld\n", rabbitPopulationSimulation(30));
     
     
     for(int i=0; i<5;i++){
 
-            population* p = create_new_population();
+            population* p = createNewPopulation();
 
-            rabbit* r1 = create_new_rabbit();
-            add_rabbit(p, r1);
+            rabbit* r1 = createNewRabbit();
+            addRabbit(p, r1);
             r1->sex = 0;
             r1->age = 13;
 
-            rabbit* r2 = create_new_rabbit();
-            add_rabbit(p, r2);
+            rabbit* r2 = createNewRabbit();
+            addRabbit(p, r2);
             r2->sex = 0;
             r2->age = 13;
 
-            rabbit* r4 = create_new_rabbit();
-            add_rabbit(p, r4);
+            rabbit* r4 = createNewRabbit();
+            addRabbit(p, r4);
             r4->sex = 0;
             r4->age = 13;
 
-            rabbit* r5 = create_new_rabbit();
-            add_rabbit(p, r5);
+            rabbit* r5 = createNewRabbit();
+            addRabbit(p, r5);
             r5->sex = 0;
             r5->age = 13;
 
-            rabbit* r3 = create_new_rabbit();
-            add_rabbit(p, r3);
+            rabbit* r3 = createNewRabbit();
+            addRabbit(p, r3);
             r3->sex = 0;
             r3->age = 13;
 
-            rabbit* r6 = create_new_rabbit();
-            add_rabbit(p, r6);
+            rabbit* r6 = createNewRabbit();
+            addRabbit(p, r6);
             r6->sex = 0;
             r6->age = 13;
 
@@ -532,7 +532,7 @@ int main(){
             life(p, 72);
             printf("nb lapins : %d\n", p->nb_rabbit);
 
-            free_population(p);
+            freePopulation(p);
     }
 
 
