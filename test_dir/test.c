@@ -513,23 +513,23 @@ int main(){
 
             rabbit* r5 = createNewRabbit();
             addRabbit(p, r5);
-            r5->sex = 0;
+            r5->sex = 1;
             r5->age = 13;
 
             rabbit* r3 = createNewRabbit();
             addRabbit(p, r3);
-            r3->sex = 0;
+            r3->sex = 1;
             r3->age = 13;
 
             rabbit* r6 = createNewRabbit();
             addRabbit(p, r6);
-            r6->sex = 0;
+            r6->sex = 1;
             r6->age = 13;
 
             p->nb_rabbit = 6;
             p->nb_total_rabbit = 6;
 
-            life(p, 72);
+            life(p, 120);
             printf("nb lapins : %d\n", p->nb_rabbit);
 
             freePopulation(p);
