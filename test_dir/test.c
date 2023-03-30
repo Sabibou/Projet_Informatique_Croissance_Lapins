@@ -480,8 +480,8 @@ void life(population* p, int months){
             i++; //on passe au lapin suivant
         }
         current_month++;  //on passe au mois suivant
-        printf("%d : vivants : %d | morts : %d | total : %d\n", current_month, p->nb_rabbit, p->nb_total_rabbit-p->nb_rabbit, p->nb_total_rabbit);
-    } 
+        //printf("%d : vivants : %d | morts : %d | total : %d\n", current_month, p->nb_rabbit, p->nb_total_rabbit-p->nb_rabbit, p->nb_total_rabbit);
+    }
 }
 
 int main(){
@@ -489,10 +489,10 @@ int main(){
     unsigned long init[4]={0x123, 0x234, 0x345, 0x456}, length=4;
     init_by_array(init, length); 
 
-    printf("%ld\n", rabbitPopulationSimulation(30));
+    //printf("%ld\n", rabbitPopulationSimulation(30));
     
     
-    for(int i=0; i<5;i++){
+    for(int i=0; i<1000;i++){
 
             population* p = createNewPopulation();
 
@@ -529,7 +529,7 @@ int main(){
             p->nb_rabbit = 6;
             p->nb_total_rabbit = 6;
 
-            life(p, 120);
+            life(p, 70);
             printf("nb lapins : %d\n", p->nb_rabbit);
 
             freePopulation(p);
