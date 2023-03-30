@@ -442,7 +442,7 @@ void life(population* p, int months){
 
     int current_month = 0;
 
-    while(current_month < months && p->nb_rabbit > 0){ 
+    while(current_month < months && p->nb_rabbit > 1){ 
 
         int i = 0;
         int index = p->nb_rabbit;
@@ -480,7 +480,7 @@ void life(population* p, int months){
             i++; //on passe au lapin suivant
         }
         current_month++;  //on passe au mois suivant
-        //printf("%d : vivants : %d | morts : %d | total : %d\n", current_month, p->nb_rabbit, p->nb_total_rabbit-p->nb_rabbit, p->nb_total_rabbit);
+        printf("%d : vivants : %d | morts : %d | total : %d\n", current_month, p->nb_rabbit, p->nb_total_rabbit-p->nb_rabbit, p->nb_total_rabbit);
     }
 }
 

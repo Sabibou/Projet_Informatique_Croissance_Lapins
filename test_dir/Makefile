@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-c -Wall -Wextra
 LDFLAGS=-lm
-SOURCES=test.c mersenne_twister.c 
+SOURCES=Lab4.c MERSENNE_TWISTER.c 
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=main
 .PHONY : clean
