@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-#include "mersenne_twister.h"
+#include "MERSENNE_TWISTER.h"
 
 float POURCENT_LITTER[5] = {0.07, 0.27, 0.32, 0.29, 0.05};
 float POURCENT_MATURITY[4] = {0.15, 0.27, 0.47, 0.11};
