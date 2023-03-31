@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "MERSENNE_TWISTER.h"
+#include "CONFIDENCE_INTERVALS.h"
 
 float POURCENT_LITTER[5] = {0.07, 0.27, 0.32, 0.29, 0.05};
 float POURCENT_MATURITY[4] = {0.15, 0.27, 0.47, 0.11};
@@ -485,7 +486,7 @@ void life(population * p, int months)
 
     while(current_month < months && p->nb_rabbit > 1)
     { 
-
+        printf("\n");
         int i = 0;
         int index = p->nb_rabbit;
         rabbit* current_r = p->start;
@@ -553,7 +554,7 @@ int main()
     init_by_array(init, length); 
 
     //printf("%ld\n", rabbitPopulationSimulation(30));
-    int nrep = 30;
+    int nrep = 3;
     int * tab = malloc(nrep * sizeof(int));
     int nRabbit;
     for(int i=0; i<nrep;i++)
@@ -596,13 +597,14 @@ int main()
 
         life(p, 70);
         //printf("nb lapins : %d\n", p->nb_rabbit);
-        nRabbit = p->nb_rabbit        
+        nRabbit = p->nb_rabbit;        
         tab[i] = nRabbit;
         freePopulation(p);
     }
 
-    confInt CI = confidenceIntervals(tab,30,2.75);
-    printf("The confidence intervals is [%f, %f].\n\n",CI.lowerbound, CI.upperbound);
+    //for(int i=0;i<nrep;i++){printf("%d ,",tab[i]);}
+    confInt CIR = confidenceIntervals(tab,30,2.75);
+    printf("The confidence intervals is [%f, %f].\n\n",CIR.lowerbound, CIR.upperbound);
 
 
     return 0;
