@@ -554,7 +554,9 @@ int main()
     init_by_array(init, length); 
 
     //printf("%ld\n", rabbitPopulationSimulation(30));
-    int nrep = 3;
+    int nrep;
+    printf("Nombre de réplications : ");
+    scanf("%d",&nrep);
     int * tab = malloc(nrep * sizeof(int));
     int nRabbit;
     for(int i=0; i<nrep;i++)
