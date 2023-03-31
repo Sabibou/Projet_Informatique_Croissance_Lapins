@@ -3,7 +3,6 @@
 #define CONFIDENCE_INTERVALS
 
 double mean(int * tab, int n);
-void errors(double mean);
 typedef struct confidenceIntervals
 {
     double lowerbound; //borne inférieure

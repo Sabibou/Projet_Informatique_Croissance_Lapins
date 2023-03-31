@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <math.h>
-//#define M_PI (3.14159265358979323846264338327950288)
+
 
 double mean(int * tab, int n)
 {    
@@ -10,19 +10,6 @@ double mean(int * tab, int n)
         sum += tab[i];
     }
     return sum / (double)n;
-}
-
-void errors(double mean)
-{
-    /* Calcul de l'erreur absolue */
-    double absErr = fabs(mean - M_PI);
-    /* Calcul de l'erreur relative */
-    double relErr = absErr / M_PI;
-
-    printf("\n");
-    printf("The arithmetic mean is %.7lf.\n", mean);
-    printf("The absolute error is %.7lf.\n", absErr);
-    printf("The relative error is %.7lf.\n\n", relErr);
 }
 
 typedef struct confidenceIntervals
@@ -38,9 +25,7 @@ confInt confidenceIntervals(int * tab, int nrep, double t)
     double var_estimate = 0;
     double sd_estimate = 0;
     double R = 0;
-    //int * tab = replicateLife(npoints, nrep);
     double moy = mean(tab, nrep);
-    errors(moy);
 
     for(int i =0;i<nrep;i++)
     {
@@ -52,6 +37,7 @@ confInt confidenceIntervals(int * tab, int nrep, double t)
     R = t * sqrt(var_estimate / nrep);
     CI.lowerbound = moy - R;
     CI.upperbound = moy + R;
+    printf("\n");
     printf("L'estimateur de la variance est %f \n", var_estimate);
     printf("Lestimateur de l'écart-type est : %f \n\n", sd_estimate);
 

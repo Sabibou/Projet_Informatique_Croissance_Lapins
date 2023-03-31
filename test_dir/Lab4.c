@@ -533,19 +533,6 @@ void life(population * p, int months)
     }
 }
 
-int * replicateLife(population * p, int months, int nrep)
-{
-    int * tab = malloc(nrep * sizeof(int));
-    int nRabbit;
-    for(int i=0;i<nrep;i++)
-    {
-        life(p, months);
-        nRabbit = p->nb_rabbit;       
-        tab[i] = nRabbit;
-    }
-    return tab;
-}
-
 
 int main()
 {
