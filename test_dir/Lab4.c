@@ -532,6 +532,20 @@ void life(population * p, int months)
     }
 }
 
+int * replicateLife(population * p, int months, int nrep)
+{
+    int * tab = malloc(nrep * sizeof(int));
+    int nRabbit;
+    for(int i=0;i<n;i++)
+    {
+        life(p, months);
+        nRabbit = p->nb_rabbit        
+        tab[i] = nRabbit;
+    }
+    return tab;
+}
+
+
 int main()
 {
 
@@ -539,9 +553,10 @@ int main()
     init_by_array(init, length); 
 
     //printf("%ld\n", rabbitPopulationSimulation(30));
-    
-    
-    for(int i=0; i<1000;i++)
+    int nrep = 30;
+    int * tab = malloc(nrep * sizeof(int));
+    int nRabbit;
+    for(int i=0; i<nrep;i++)
     {
 
         population * p = createNewPopulation();
@@ -580,10 +595,14 @@ int main()
         p->nb_total_rabbit = 6;
 
         life(p, 70);
-        printf("nb lapins : %d\n", p->nb_rabbit);
-
+        //printf("nb lapins : %d\n", p->nb_rabbit);
+        nRabbit = p->nb_rabbit        
+        tab[i] = nRabbit;
         freePopulation(p);
     }
+
+    confInt CI = confidenceIntervals(tab,30,2.75);
+    printf("The confidence intervals is [%f, %f].\n\n",CI.lowerbound, CI.upperbound);
 
 
     return 0;
