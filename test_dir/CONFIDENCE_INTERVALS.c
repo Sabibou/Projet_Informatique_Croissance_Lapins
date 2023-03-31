@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 
 
 double mean(int * tab, int n)
@@ -38,7 +39,7 @@ confInt confidenceIntervals(int * tab, int nrep, double t)
     double R = 0;
     //int * tab = replicateLife(npoints, nrep);
     double moy = mean(tab, nrep);
-    errors(mean);
+    errors(moy);
 
     for(int i =0;i<nrep;i++)
     {
