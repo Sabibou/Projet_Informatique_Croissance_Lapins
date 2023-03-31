@@ -592,7 +592,7 @@ int main()
     }
 
     //for(int i=0;i<nrep;i++){printf("%d ,",tab[i]);}
-    confInt CIR = confidenceIntervals(tab,30,2.75);
+    confInt CIR = confidenceIntervals(tab,nrep,2.75);
     printf("The confidence intervals is [%f, %f].\n\n",CIR.lowerbound, CIR.upperbound);
 
 
