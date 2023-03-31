@@ -26,6 +26,8 @@ confInt confidenceIntervals(int * tab, int nrep, double t)
     double sd_estimate = 0;
     double R = 0;
     double moy = mean(tab, nrep);
+    printf("\n");
+    printf("La moyenne arithmétique est %f \n", moy);
 
     for(int i =0;i<nrep;i++)
     {
